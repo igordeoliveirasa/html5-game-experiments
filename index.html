@@ -7,7 +7,17 @@
 <script src="js/three.min.js"></script>
 <script>
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    var fov = 75;
+    var aspect = window.innerWidth/window.innerHeight;
+    var near = 0.1;
+    var far = 1000;
+
+    var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera.position.z = 5;
+    camera.position.x = 0;
+    camera.position.y = 0;
+
+    camera.lookAt(new THREE.Vector3( 0, 0, 0 ));
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -18,13 +28,29 @@
     var cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    camera.position.z = 5;
+
+
+
+
+
+    var material = new THREE.MeshBasicMaterial( {color: 0x0088cc} );
+    var sphere = new THREE.Mesh(new THREE.SphereGeometry(10, 100, 100), material);
+    sphere.overdraw = true;
+    sphere.material.side = THREE.BackSide;
+    scene.add(sphere);
+
+
+    var geometry = new THREE.PlaneGeometry( 5, 20 );
+    var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+    var plane = new THREE.Mesh( geometry, material );
+    scene.add( plane );
+
 
     var render = function () {
         requestAnimationFrame(render);
 
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
+        cube.rotation.x += 0.1;
+        cube.rotation.y += 0.1;
 
         renderer.render(scene, camera);
     };
