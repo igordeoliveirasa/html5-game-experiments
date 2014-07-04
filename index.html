@@ -13,45 +13,45 @@
     var far = 1000;
 
     var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.z = 5;
-    camera.position.x = 0;
-    camera.position.y = 0;
-
-    camera.lookAt(new THREE.Vector3( 0, 0, 0 ));
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
+    // player
     var geometry = new THREE.CubeGeometry(1,1,1);
     var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
     var cube = new THREE.Mesh(geometry, material);
+
+    cube.position.x = 0;
+    cube.position.y = 0;
+    cube.position.z = 1;
+
     scene.add(cube);
 
-
-
-
-
-
+    // sky
     var material = new THREE.MeshBasicMaterial( {color: 0x0088cc} );
     var sphere = new THREE.Mesh(new THREE.SphereGeometry(10, 100, 100), material);
     sphere.overdraw = true;
     sphere.material.side = THREE.BackSide;
-    scene.add(sphere);
+    //scene.add(sphere);
 
-
-    var geometry = new THREE.PlaneGeometry( 5, 20 );
+    // floor
+    var geometry = new THREE.PlaneGeometry( 500, 500 );
     var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
     var plane = new THREE.Mesh( geometry, material );
     scene.add( plane );
 
 
     var render = function () {
+        //camera.position.x -= 0.01;
+        camera.position.x = cube.position.x;
+        camera.position.y = cube.position.y-3;
+        camera.position.z = 2;
+
+        camera.lookAt(new THREE.Vector3( cube.position.x/2, cube.position.y/2, cube.position.z/2 ));
+
         requestAnimationFrame(render);
-
-        cube.rotation.x += 0.1;
-        cube.rotation.y += 0.1;
-
         renderer.render(scene, camera);
     };
 
