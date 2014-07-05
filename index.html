@@ -34,7 +34,7 @@
     cube.position.z = 1;
 
     scene.add(cube);
-    //cube.add(camera);
+    cube.add(camera);
 
     camera.position.x = cube.position.x;
     camera.position.y = cube.position.y-3;
@@ -79,10 +79,6 @@
         if (keyboard.pressed("right")) {
             playerAngle -= 0.05;
         }
-        //if (keyboard.pressed("down")) {
-        //    accelerating = true;
-        //    velocity -= acceleration;
-        //}
 
         // velocity limit
         if (velocity>0.1) {
@@ -98,10 +94,9 @@
         }
 
         // ------------
-        console.log(velocity);
         cube.rotation.z = playerAngle;
-        cube.position.x += velocity * Math.cos(playerAngle);
-        cube.position.y += velocity * Math.sin(playerAngle);
+        cube.position.x -= velocity * Math.sin(playerAngle);
+        cube.position.y += velocity * Math.cos(playerAngle);
 
         //camera.position.x -= 0.01;
         //camera.lookAt(new THREE.Vector3( cube.position.x, cube.position.y, cube.position.z ));
