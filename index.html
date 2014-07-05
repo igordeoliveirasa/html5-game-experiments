@@ -103,43 +103,7 @@
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     };
-
-    //document.addEventListener("keydown", onDocumentKeyDown, false);
-    //document.addEventListener("keyup", onDocumentKeyUp, false);
-
     var keyboard    = new THREEx.KeyboardState();
-
-
-    /*
-    function onDocumentKeyDown(event) {
-        var keyCode = event.which;
-
-        // left
-        if (keyCode==37) {
-            //cube.position.x -= 1;
-            playerAngle += 0.1;
-        }
-
-        // up
-        if (keyCode==38) {
-            velocity += acceleration;
-        }
-
-        // right
-        if (keyCode==39) {
-            playerAngle -= 0.1;
-        }
-
-        // down
-        if (keyCode==40) {
-            velocity -= acceleration;
-        }
-
-        cube.position.x = velocity * Math.cos(playerAngle);
-        cube.position.y = velocity * Math.sin(playerAngle);
-        cube.rotation.z = playerAngle;
-    }
-*/
     render();
 </script>
 </body>
