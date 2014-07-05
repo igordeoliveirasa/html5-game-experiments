@@ -20,19 +20,22 @@
     var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 
+    // renderer
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMapEnabled = true;
+    renderer.shadowMapSoft = true;
+
     document.body.appendChild(renderer.domElement);
 
     // player
     var geometry = new THREE.CubeGeometry(1,1,1);
-    var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+    var material = new THREE.MeshLambertMaterial({color: 'blue'});
+
     var cube = new THREE.Mesh(geometry, material);
-
-    cube.position.x = velocity * Math.cos(playerAngle);
-    cube.position.y = velocity * Math.sin(playerAngle);
     cube.position.z = 1;
-
+    cube.castShadow = true;
+    cube.receiveShadow = true;
     scene.add(cube);
     cube.add(camera);
 
@@ -42,31 +45,62 @@
 
     camera.lookAt( cube.position );
 
-
     // object
-    var material = new THREE.MeshBasicMaterial( {color: 0x0011cc} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x0011cc} );
     var obj = new THREE.Mesh(new THREE.SphereGeometry(1, 100, 100), material);
-    obj.overdraw = true; // what is this?
+
     obj.position.x = -5;
     obj.position.y = 5;
     obj.position.z = 1;
+
+    obj.castShadow = true;
+    obj.receiveShadow = true;
+
     scene.add(obj);
 
 
     // sky
     var material = new THREE.MeshBasicMaterial( {color: 0x0088cc} );
     var sphere = new THREE.Mesh(new THREE.SphereGeometry(1000, 100, 100), material);
-    sphere.overdraw = true;
     sphere.material.side = THREE.BackSide;
-    scene.add(sphere);
+    //scene.add(sphere);
 
-    // floor
+    // ground
     var geometry = new THREE.PlaneGeometry( 500, 500 );
-    var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-    var plane = new THREE.Mesh( geometry, material );
-    scene.add( plane );
+    var material = new THREE.MeshPhongMaterial( {color: 'green'} );
+    var ground = new THREE.Mesh( geometry, material );
+
+    ground.position.x = 0;
+    ground.position.y = 0;
+    ground.position.z = 0;
+
+    ground.castShadow = true;
+    ground.receiveShadow = true;
+    scene.add( ground );
+
+
+    //light
+    scene.add( new THREE.AmbientLight( 0x404040 ) );
+
+    // directional lighting
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(-10, -10, 10).normalize();
+    directionalLight.castShadow = true;
+    directionalLight.shadowDarkness = 0.5
+    directionalLight.shadowCameraVisible = true;
+    directionalLight.shadowCameraFar = 1000;
+    directionalLight.shadowDarkness = 1;
+    scene.add(directionalLight);
 
     var render = function () {
+        //collision
+        var ray = new THREE.Raycaster( cube.position, cube.position.clone().normalize() );
+        var collisionResults = ray.intersectObjects( [obj] );
+        if ( collisionResults.length > 0 ) {
+            console.log("ok");
+        }
+
+
         var accelerating = false;
 
         if (keyboard.pressed("left")) {
