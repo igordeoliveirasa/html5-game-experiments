@@ -5,6 +5,7 @@
 </head>
 <body>
 <script src="js/three.min.js"></script>
+<script src="js/threex.keyboardstate.js"></script>
 <script>
     var scene = new THREE.Scene();
     var fov = 75;
@@ -12,7 +13,12 @@
     var near = 0.1;
     var far = 1000;
 
+    var playerAngle = 0;
+    var velocity = 0;
+    var acceleration = 0.01;
+
     var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -23,18 +29,36 @@
     var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
     var cube = new THREE.Mesh(geometry, material);
 
-    cube.position.x = 0;
-    cube.position.y = 0;
+    cube.position.x = velocity * Math.cos(playerAngle);
+    cube.position.y = velocity * Math.sin(playerAngle);
     cube.position.z = 1;
 
     scene.add(cube);
+    //cube.add(camera);
+
+    camera.position.x = cube.position.x;
+    camera.position.y = cube.position.y-3;
+    camera.position.z = 2;
+
+    camera.lookAt( cube.position );
+
+
+    // object
+    var material = new THREE.MeshBasicMaterial( {color: 0x0011cc} );
+    var obj = new THREE.Mesh(new THREE.SphereGeometry(1, 100, 100), material);
+    obj.overdraw = true; // what is this?
+    obj.position.x = -5;
+    obj.position.y = 5;
+    obj.position.z = 1;
+    scene.add(obj);
+
 
     // sky
     var material = new THREE.MeshBasicMaterial( {color: 0x0088cc} );
-    var sphere = new THREE.Mesh(new THREE.SphereGeometry(10, 100, 100), material);
+    var sphere = new THREE.Mesh(new THREE.SphereGeometry(1000, 100, 100), material);
     sphere.overdraw = true;
     sphere.material.side = THREE.BackSide;
-    //scene.add(sphere);
+    scene.add(sphere);
 
     // floor
     var geometry = new THREE.PlaneGeometry( 500, 500 );
@@ -42,19 +66,85 @@
     var plane = new THREE.Mesh( geometry, material );
     scene.add( plane );
 
-
     var render = function () {
+        var accelerating = false;
+
+        if (keyboard.pressed("left")) {
+            playerAngle += 0.05;
+        }
+        if (keyboard.pressed("up")) {
+            accelerating = true;
+            velocity += acceleration;
+        }
+        if (keyboard.pressed("right")) {
+            playerAngle -= 0.05;
+        }
+        //if (keyboard.pressed("down")) {
+        //    accelerating = true;
+        //    velocity -= acceleration;
+        //}
+
+        // velocity limit
+        if (velocity>0.1) {
+            velocity = 0.1;
+        }
+
+        if (!accelerating) {
+            velocity -= acceleration;
+        }
+
+        if (velocity<0) {
+            velocity = 0;
+        }
+
+        // ------------
+        console.log(velocity);
+        cube.rotation.z = playerAngle;
+        cube.position.x += velocity * Math.cos(playerAngle);
+        cube.position.y += velocity * Math.sin(playerAngle);
+
         //camera.position.x -= 0.01;
-        camera.position.x = cube.position.x;
-        camera.position.y = cube.position.y-3;
-        camera.position.z = 2;
-
-        camera.lookAt(new THREE.Vector3( cube.position.x/2, cube.position.y/2, cube.position.z/2 ));
-
+        //camera.lookAt(new THREE.Vector3( cube.position.x, cube.position.y, cube.position.z ));
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     };
 
+    //document.addEventListener("keydown", onDocumentKeyDown, false);
+    //document.addEventListener("keyup", onDocumentKeyUp, false);
+
+    var keyboard    = new THREEx.KeyboardState();
+
+
+    /*
+    function onDocumentKeyDown(event) {
+        var keyCode = event.which;
+
+        // left
+        if (keyCode==37) {
+            //cube.position.x -= 1;
+            playerAngle += 0.1;
+        }
+
+        // up
+        if (keyCode==38) {
+            velocity += acceleration;
+        }
+
+        // right
+        if (keyCode==39) {
+            playerAngle -= 0.1;
+        }
+
+        // down
+        if (keyCode==40) {
+            velocity -= acceleration;
+        }
+
+        cube.position.x = velocity * Math.cos(playerAngle);
+        cube.position.y = velocity * Math.sin(playerAngle);
+        cube.rotation.z = playerAngle;
+    }
+*/
     render();
 </script>
 </body>
