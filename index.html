@@ -48,7 +48,7 @@ ground.position.x = 0;
 ground.position.y = 0;
 ground.position.z = 0;
 ground.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-ground.receiveShadow = true;
+//ground.receiveShadow = true;
 scene.add( ground );
 
 
@@ -188,7 +188,7 @@ function buildAxes( length ) {
 
 }
 
-scene.add(buildAxes(1000));
+//scene.add(buildAxes(1000));
 
 
 
@@ -296,6 +296,7 @@ var source = document.createElement( 'source' );
 //source.src = 'sounds/musics/04. Midori - When the Swallows Return.mp3';
 source.src = 'sounds/musics/06. Midori - The Rivers of Home.mp3';
 audio.appendChild( source );
+audio.load();
 audio.play();
 
 </script>
