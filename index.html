@@ -35,7 +35,12 @@
 
     // player
     var geometry = new THREE.BoxGeometry(1,1,1);
-    var material = new THREE.MeshLambertMaterial({color: 'blue', overdraw: 0.5});
+
+    var texture = THREE.ImageUtils.loadTexture( "textures/box.jpg" );
+    var material = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture} );
+
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1, 1);
 
     var cube = new THREE.Mesh(geometry, material);
     cube.position.z = 0.8;
@@ -51,8 +56,11 @@
     camera.lookAt( cube.position );
 
     // object
-    var material = new THREE.MeshLambertMaterial( {color: 0x0011cc, overdraw: 0.5} );
-    var obj = new THREE.Mesh(new THREE.SphereGeometry(1, 100, 100), material);
+    var texture = THREE.ImageUtils.loadTexture( "textures/rock.jpg" );
+    var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture} );
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 1,1 );
+    var obj = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 20), material);
 
     obj.position.x = -5;
     obj.position.y = 5;
@@ -65,8 +73,8 @@
 
 
     // sky
-    var material = new THREE.MeshBasicMaterial( {color: 0x0088cc, overdraw: 0.5} );
-    var sphere = new THREE.Mesh(new THREE.SphereGeometry(1000, 100, 100), material);
+    var material = new THREE.MeshBasicMaterial( {color: 0x0088cc, wireframe: false} );
+    var sphere = new THREE.Mesh(new THREE.SphereGeometry(1000, 10, 10), material);
     sphere.material.side = THREE.BackSide;
     scene.add(sphere);
 
@@ -74,20 +82,24 @@
 
 
     // ground
-    var geometry = new THREE.PlaneGeometry( 100, 100 );
-    var material = new THREE.MeshLambertMaterial( {color: 'green', overdraw: 0.5} );
-    var ground = new THREE.Mesh( geometry, material );
 
+    var geometry = new THREE.PlaneGeometry( 400, 400 );
+    var texture = THREE.ImageUtils.loadTexture( "textures/grass.jpg" );
+    var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture} );
+
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 200, 200 );
+
+    var ground = new THREE.Mesh(geometry, material);
     ground.position.x = 0;
     ground.position.y = 0;
     ground.position.z = 0;
-
-    ground.castShadow = true;
+    //ground.castShadow = true;
     ground.receiveShadow = true;
     scene.add( ground );
 
     // LIGHTS
-    var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+    var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff,1 );
     hemiLight.color.setHSL( 0.6, 1, 0.6 );
     //hemiLight.groundColor.setHSL( 0.095, 1, 0.75 ); // setar depois a cor real.
     hemiLight.position.set( 0, 500, 0 );
@@ -101,8 +113,8 @@
     scene.add( dirLight );
 
     dirLight.castShadow = true;
-    dirLight.shadowMapWidth = 4096;
-    dirLight.shadowMapHeight = 4096;
+    dirLight.shadowMapWidth = 2048;
+    dirLight.shadowMapHeight = 2048;
 
 
     var d = 50;
@@ -156,10 +168,13 @@
     // init loading
     loader.load('models/tree/tree.js', function (geometry, material) {
         // create a mesh with models geometry and material
+        var materials = new THREE.MeshFaceMaterial(material);
+        materials.wireframe = true;
         var mesh = new THREE.Mesh(
                 geometry,
-                new THREE.MeshFaceMaterial(material)
+                materials
         );
+
 
         mesh.rotation.x = Math.PI/2;
         mesh.scale.set( 0.001, 0.001, 0.001 );
@@ -176,8 +191,7 @@
     loader.load('models/inn/inn.js', function (geometry, material) {
         // create a new material
         var materials = new THREE.MeshFaceMaterial(material);
-
-        // create a mesh with models geometry and material
+        materials.wireframe = true;
         var mesh = new THREE.Mesh(
                 geometry,
                 materials
