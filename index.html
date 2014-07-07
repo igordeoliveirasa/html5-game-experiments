@@ -7,6 +7,7 @@
 <script src="js/three.min.js"></script>
 <script src="js/threex.keyboardstate.js"></script>
 <script>
+
 // renderer
 var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -18,7 +19,6 @@ renderer.shadowMapSoft = true;
 renderer.shadowMapType = THREE.PCFSoftShadowMap;
 
 document.body.appendChild(renderer.domElement);
-
 
 var scene = new THREE.Scene();
 scene.fog = new THREE.Fog( 0xffffff, 1000, 10000 );
@@ -288,6 +288,16 @@ var render = function () {
 };
 var keyboard    = new THREEx.KeyboardState();
 render();
+
+// AUDIO
+
+var audio = document.createElement( 'audio' );
+var source = document.createElement( 'source' );
+//source.src = 'sounds/musics/04. Midori - When the Swallows Return.mp3';
+source.src = 'sounds/musics/06. Midori - The Rivers of Home.mp3';
+audio.appendChild( source );
+audio.play();
+
 </script>
 </body>
 </html>
