@@ -16,7 +16,7 @@ renderer.gammaInput = true;
 renderer.gammaOutput = true;
 renderer.shadowMapEnabled = true;
 renderer.shadowMapSoft = true;
-renderer.shadowMapType = THREE.PCFSoftShadowMap;
+renderer.shadowMapType = THREE.PCFShadowMap;//THREE.PCFSoftShadowMap;
 
 document.body.appendChild(renderer.domElement);
 
