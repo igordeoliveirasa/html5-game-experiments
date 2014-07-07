@@ -8,6 +8,26 @@
 <script src="js/threex.keyboardstate.js"></script>
 <script>
 
+
+/*
+var text2 = document.createElement('div');
+text2.style.position = 'absolute';
+//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
+text2.style.width = 100;
+text2.style.height = 100;
+//text2.style.backgroundColor = "blue";
+text2.innerHTML = "hi there! That's Igor and Alex's prototype game. Welcome!";
+text2.style.top = 200 + 'px';
+text2.style.left = 200 + 'px';
+document.body.appendChild(text2);
+//For some guidance on how to project from the 3D point in your canvas to a 2D point in pixels in your browser window, use a code snippet like the following:
+/*function toXYCoords (pos) {
+    var vector = projector.projectVector(pos.clone(), camera);
+    vector.x = (vector.x + 1)/2 * window.innerWidth;
+    vector.y = -(vector.y - 1)/2 * window.innerHeight;
+    return vector;
+}*/
+
 // renderer
 var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -30,7 +50,8 @@ var far = 1500;
 
 var playerAngle = 0;
 var velocity = 0;
-var acceleration = 0.01;
+var max_velocity = 0.15;
+var acceleration = 0.02;
 
 var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
@@ -188,7 +209,7 @@ function buildAxes( length ) {
 
 }
 
-//scene.add(buildAxes(1000));
+scene.add(buildAxes(1000));
 
 
 
@@ -230,8 +251,6 @@ loader.load('models/inn/inn.js', function (geometry, material) {
     mesh.position.y = 0;
     mesh.position.z = -40;
 
-    //mesh.rotation.y = 180;
-
     mesh.doubleSided = true;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -264,6 +283,7 @@ var animate = function () {
         new_position.y = cube.position.y;
         new_position.z = cube.position.z - (velocity * Math.cos(playerAngle));
 
+
         if (!is_colliding(new_position, [obj])) {
             cube.position.x = new_position.x;
             cube.position.z = new_position.z;
@@ -275,12 +295,19 @@ var animate = function () {
     }
 
     // velocity limit
-    if (velocity>0.1) {
-        velocity = 0.1;
+    if (velocity>max_velocity) {
+        velocity = max_velocity;
     }
 
-    if (!accelerating && velocity < 0) {
-        velocity -= acceleration;
+    if (!accelerating && velocity > 0) {
+        // check collision
+        new_position.x = cube.position.x - (velocity * Math.sin(playerAngle));
+        new_position.y = cube.position.y;
+        new_position.z = cube.position.z - (velocity * Math.cos(playerAngle));
+
+        velocity -= acceleration*2;
+        cube.position.x = new_position.x;
+        cube.position.z = new_position.z;
     }
 
     if (velocity<0) {
