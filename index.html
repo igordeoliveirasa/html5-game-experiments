@@ -92,14 +92,35 @@
     directionalLight.shadowDarkness = 1;
     scene.add(directionalLight);
 
-    var render = function () {
-        //collision
-        var ray = new THREE.Raycaster( cube.position, cube.position.clone().normalize() );
-        var collisionResults = ray.intersectObjects( [obj] );
-        if ( collisionResults.length > 0 ) {
-            console.log("ok");
-        }
+    //collision
+    var raycaster = new THREE.Raycaster();
+    var rays = [
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(1, 0, 1),
+        new THREE.Vector3(1, 0, 0),
+        new THREE.Vector3(1, 0, -1),
+        new THREE.Vector3(0, 0, -1),
+        new THREE.Vector3(-1, 0, -1),
+        new THREE.Vector3(-1, 0, 0),
+        new THREE.Vector3(-1, 0, 1)
+    ];
 
+    var is_colliding = function(position, obstacles) {
+
+        for (i = 0; i < rays.length; i += 1) {
+            // We reset the raycaster to this direction
+            raycaster.set(position, rays[i]);
+            // Test if we intersect with any obstacle mesh
+            collisions = raycaster.intersectObjects(obstacles);
+            // And disable that direction if we do
+            if (collisions.length > 0 && collisions[0].distance < 0.5) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    var render = function () {
 
         var accelerating = false;
 
@@ -109,6 +130,17 @@
         if (keyboard.pressed("up")) {
             accelerating = true;
             velocity += acceleration;
+
+            // check collision
+            var new_position = new THREE.Vector3(
+                            cube.position.x - (velocity * Math.sin(playerAngle)),
+                            cube.position.y + (velocity * Math.cos(playerAngle)),
+                            cube.position.z );
+            if (!is_colliding(new_position, [obj])) {
+                cube.position.x = new_position.x;
+                cube.position.y = new_position.y;
+                cube.position.z = new_position.z;
+            }
         }
         if (keyboard.pressed("right")) {
             playerAngle -= 0.05;
@@ -127,13 +159,8 @@
             velocity = 0;
         }
 
-        // ------------
         cube.rotation.z = playerAngle;
-        cube.position.x -= velocity * Math.sin(playerAngle);
-        cube.position.y += velocity * Math.cos(playerAngle);
 
-        //camera.position.x -= 0.01;
-        //camera.lookAt(new THREE.Vector3( cube.position.x, cube.position.y, cube.position.z ));
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     };
