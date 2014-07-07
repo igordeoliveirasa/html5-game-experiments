@@ -188,7 +188,7 @@ function buildAxes( length ) {
 
 }
 
-scene.add(buildAxes(1000));
+//scene.add(buildAxes(1000));
 
 
 
@@ -204,8 +204,6 @@ loader.load('models/tree/tree.js', function (geometry, material) {
             geometry,
             materials
     );
-
-
 
     mesh.scale.set( 0.001, 0.001, 0.001 );
     mesh.position.x = 30;
@@ -240,8 +238,15 @@ loader.load('models/inn/inn.js', function (geometry, material) {
     scene.add(mesh);
 });
 
-var render = function () {
-    var accelerating = false;
+var new_position = new THREE.Vector3(0,0,0);
+var accelerating = false;
+
+var animate = function () {
+
+    requestAnimationFrame(animate);
+
+    accelerating = false;
+
 
     if (keyboard.pressed("left")) {
         playerAngle += 0.05;
@@ -255,10 +260,10 @@ var render = function () {
         velocity += acceleration;
 
         // check collision
-        var new_position = new THREE.Vector3(
-                        cube.position.x - (velocity * Math.sin(playerAngle)),
-                        cube.position.y,
-                cube.position.z - (velocity * Math.cos(playerAngle)));
+        new_position.x = cube.position.x - (velocity * Math.sin(playerAngle));
+        new_position.y = cube.position.y;
+        new_position.z = cube.position.z - (velocity * Math.cos(playerAngle));
+
         if (!is_colliding(new_position, [obj])) {
             cube.position.x = new_position.x;
             cube.position.z = new_position.z;
@@ -283,11 +288,11 @@ var render = function () {
     }
 
     cube.rotation.y = playerAngle;
-    requestAnimationFrame(render);
     renderer.render(scene, camera);
 };
+
 var keyboard    = new THREEx.KeyboardState();
-render();
+animate();
 
 // AUDIO
 
@@ -296,6 +301,7 @@ var source = document.createElement( 'source' );
 //source.src = 'sounds/musics/04. Midori - When the Swallows Return.mp3';
 source.src = 'sounds/musics/06. Midori - The Rivers of Home.mp3';
 audio.appendChild( source );
+audio.load();
 audio.play();
 
 </script>

@@ -48,7 +48,7 @@ ground.position.x = 0;
 ground.position.y = 0;
 ground.position.z = 0;
 ground.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-//ground.receiveShadow = true;
+ground.receiveShadow = true;
 scene.add( ground );
 
 
@@ -205,8 +205,6 @@ loader.load('models/tree/tree.js', function (geometry, material) {
             materials
     );
 
-
-
     mesh.scale.set( 0.001, 0.001, 0.001 );
     mesh.position.x = 30;
     mesh.position.y = 0;
@@ -240,8 +238,15 @@ loader.load('models/inn/inn.js', function (geometry, material) {
     scene.add(mesh);
 });
 
-var render = function () {
-    var accelerating = false;
+var new_position = new THREE.Vector3(0,0,0);
+var accelerating = false;
+
+var animate = function () {
+
+    requestAnimationFrame(animate);
+
+    accelerating = false;
+
 
     if (keyboard.pressed("left")) {
         playerAngle += 0.05;
@@ -255,10 +260,10 @@ var render = function () {
         velocity += acceleration;
 
         // check collision
-        var new_position = new THREE.Vector3(
-                        cube.position.x - (velocity * Math.sin(playerAngle)),
-                        cube.position.y,
-                cube.position.z - (velocity * Math.cos(playerAngle)));
+        new_position.x = cube.position.x - (velocity * Math.sin(playerAngle));
+        new_position.y = cube.position.y;
+        new_position.z = cube.position.z - (velocity * Math.cos(playerAngle));
+
         if (!is_colliding(new_position, [obj])) {
             cube.position.x = new_position.x;
             cube.position.z = new_position.z;
@@ -283,11 +288,11 @@ var render = function () {
     }
 
     cube.rotation.y = playerAngle;
-    requestAnimationFrame(render);
     renderer.render(scene, camera);
 };
+
 var keyboard    = new THREEx.KeyboardState();
-render();
+animate();
 
 // AUDIO
 
