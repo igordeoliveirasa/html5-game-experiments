@@ -1,0 +1,27 @@
+# Created with Anim8or 0.97d beta
+# Object "tree":
+
+newmtl Deep_Gre
+Ka 0 0 0
+Kd 0.106 0.459 0.11
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd Deep_Gre.jpg
+
+newmtl Light_Gr
+Ka 0 0 0
+Kd 0.106 0.459 0.11
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd Light_Gr.jpg
+
+newmtl material
+Ka 0 0 0
+Kd 0.31 0.22 0.051
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd material.jpg
+

@@ -1,0 +1,167 @@
+# Created with Anim8or 0.97d beta
+# Object "inn":
+
+newmtl madeira1
+Ka 0 0 0
+Kd 0.478 0.329 0.165
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd madeira1.jpg
+
+newmtl madeira2
+Ka 0 0 0
+Kd 0.149 0.102 0.051
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd madeira2.jpg
+
+newmtl Foregrou
+Ka 0 0 0
+Kd 0 0 0
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+
+newmtl Transluc
+Ka 0 0 0
+Kd 0.502 0.502 0.502
+Ks 0.329 0.329 0.329
+d 0.5
+Ns 0.0
+
+newmtl FrontCol
+Ka 0 0 0
+Kd 1 1 1
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+
+newmtl telhado
+Ka 0 0 0
+Kd 0.357 0.333 0.325
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd telhado.jpg
+
+newmtl Color_00
+Ka 0 0 0
+Kd 0.227 0.227 0.227
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+
+newmtl INN
+Ka 0 0 0
+Kd 0.278 0.224 0.169
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd INN.jpg
+
+newmtl pedra3
+Ka 0 0 0
+Kd 0.729 0.71 0.651
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd pedra3.jpg
+
+newmtl cobertor
+Ka 0 0 0
+Kd 0.733 0.318 0.263
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd cobertor.jpg
+
+newmtl Carpet_D
+Ka 0 0 0
+Kd 0.341 0.302 0.239
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd Carpet_D.jpg
+
+newmtl tecido3
+Ka 0 0 0
+Kd 0.31 0.161 0.0549
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd tecido3.jpg
+
+newmtl Wood_Bam
+Ka 0 0 0
+Kd 0.694 0.412 0.169
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd Wood_Bam.jpg
+
+newmtl tecido1
+Ka 0 0 0
+Kd 0.894 0.855 0.741
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd tecido1.jpg
+
+newmtl Metal_Co
+Ka 0 0 0
+Kd 0.757 0.757 0.757
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd Metal_Co.jpg
+
+newmtl pedra
+Ka 0 0 0
+Kd 0.486 0.49 0.486
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd pedra.jpg
+
+newmtl pedra01
+Ka 0 0 0
+Kd 0.486 0.49 0.486
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd pedra01.jpg
+
+newmtl pedra2
+Ka 0 0 0
+Kd 0.475 0.502 0.529
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd pedra2.jpg
+
+newmtl _Metal_R
+Ka 0 0 0
+Kd 0.722 0.459 0.357
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd _Metal_R.jpg
+
+newmtl Wallpape
+Ka 0 0 0
+Kd 0.886 0.808 0.569
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd Wallpape.bmp
+
+newmtl madeira3
+Ka 0 0 0
+Kd 0.694 0.365 0.235
+Ks 0.329 0.329 0.329
+d 1.0
+Ns 0.0
+map_Kd madeira3.jpg
+
