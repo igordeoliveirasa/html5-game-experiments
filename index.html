@@ -7,20 +7,6 @@
 <script src="js/three.min.js"></script>
 <script src="js/threex.keyboardstate.js"></script>
 <script>
-var scene = new THREE.Scene();
-scene.fog = new THREE.Fog( 0xffffff, 1000, 10000 );
-var fov = 75;
-var aspect = window.innerWidth/window.innerHeight;
-var near = 0.1;
-var far = 1000;
-
-var playerAngle = 0;
-var velocity = 0;
-var acceleration = 0.01;
-
-var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-
-
 // renderer
 var renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -33,53 +19,20 @@ renderer.shadowMapType = THREE.PCFSoftShadowMap;
 
 document.body.appendChild(renderer.domElement);
 
-// player
-var geometry = new THREE.BoxGeometry(1,1,1);
 
-var texture = THREE.ImageUtils.loadTexture( "textures/box.jpg" );
-var material = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture} );
+var scene = new THREE.Scene();
+scene.fog = new THREE.Fog( 0xffffff, 1000, 10000 );
 
-texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set( 1, 1);
+var fov = 75;
+var aspect = window.innerWidth/window.innerHeight;
+var near = 0.1;
+var far = 1500;
 
-var cube = new THREE.Mesh(geometry, material);
-cube.position.y = 0.8;
-cube.castShadow = true;
-cube.receiveShadow = true;
-scene.add(cube);
-cube.add(camera);
+var playerAngle = 0;
+var velocity = 0;
+var acceleration = 0.01;
 
-camera.position.x = cube.position.x;
-camera.position.y = 2;
-camera.position.z = cube.position.z-3;
-
-camera.lookAt( cube.position );
-
-// object
-var texture = THREE.ImageUtils.loadTexture( "textures/rock.jpg" );
-var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture} );
-texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set( 1,1 );
-var obj = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 20), material);
-
-obj.position.x = 5;
-obj.position.y = 1;
-obj.position.z = -5;
-
-obj.castShadow = true;
-obj.receiveShadow = true;
-
-scene.add(obj);
-
-
-// sky
-var material = new THREE.MeshBasicMaterial( {color: 0x0088cc, wireframe: false} );
-var sphere = new THREE.Mesh(new THREE.SphereGeometry(1000, 10, 10), material);
-sphere.material.side = THREE.BackSide;
-scene.add(sphere);
-
-
-
+var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 // ground
 
@@ -95,9 +48,54 @@ ground.position.x = 0;
 ground.position.y = 0;
 ground.position.z = 0;
 ground.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-//ground.castShadow = true;
 ground.receiveShadow = true;
 scene.add( ground );
+
+
+// player
+var geometry = new THREE.BoxGeometry(1,1,1);
+
+var texture = THREE.ImageUtils.loadTexture( "textures/box.jpg" );
+var material = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture} );
+
+texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+texture.repeat.set( 1, 1);
+
+var cube = new THREE.Mesh(geometry, material);
+cube.position.x = 38;
+cube.position.y = 0.6;
+cube.position.z = -9;
+cube.castShadow = true;
+cube.receiveShadow = true;
+scene.add(cube);
+cube.add(camera);
+
+camera.position.y = 3;
+camera.position.z = 5;
+camera.lookAt(new THREE.Vector3(0,0,0))
+
+// object
+var texture = THREE.ImageUtils.loadTexture( "textures/rock.jpg" );
+var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture} );
+texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+texture.repeat.set( 1,1 );
+var obj = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 20), material);
+
+obj.position.x = 50;
+obj.position.y = 1;
+obj.position.z = -30;
+
+obj.castShadow = true;
+obj.receiveShadow = true;
+
+scene.add(obj);
+
+// sky
+var material = new THREE.MeshBasicMaterial( {color: 0x0088cc, wireframe: false} );
+var sphere = new THREE.Mesh(new THREE.SphereGeometry(1000, 10, 10), material);
+sphere.material.side = THREE.BackSide;
+scene.add(sphere);
+
 
 // LIGHTS
 var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff,1 );
@@ -128,7 +126,6 @@ dirLight.shadowCameraBottom = -d;
 dirLight.shadowCameraFar = 3500;
 dirLight.shadowBias = -0.0001;
 dirLight.shadowDarkness = 0.35;
-//dirLight.shadowCameraVisible = true;
 
 
 //collision
@@ -149,17 +146,49 @@ var is_colliding = function(position, obstacles) {
     for (i = 0; i < rays.length; i += 1) {
         raycaster.set(position, rays[i]);
         collisions = raycaster.intersectObjects(obstacles);
-        if (collisions.length > 0 && collisions[0].distance < 0.5) {
+        if (collisions.length > 0 && collisions[0].distance < 1) {
             return true;
         }
     }
     return false;
 }
 
+function buildAxis( src, dst, colorHex, dashed ) {
+    var geom = new THREE.Geometry(),
+            mat;
+
+    if(dashed) {
+        mat = new THREE.LineDashedMaterial({ linewidth: 3, color: colorHex, dashSize: 3, gapSize: 3 });
+    } else {
+        mat = new THREE.LineBasicMaterial({ linewidth: 3, color: colorHex });
+    }
+
+    geom.vertices.push( src.clone() );
+    geom.vertices.push( dst.clone() );
+    geom.computeLineDistances(); // This one is SUPER important, otherwise dashed lines will appear as simple plain lines
+
+    var axis = new THREE.Line( geom, mat, THREE.LinePieces );
+
+    return axis;
+
+}
 
 
+function buildAxes( length ) {
+    var axes = new THREE.Object3D();
 
+    axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), 0xFF0000, false ) ); // +X
+    axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
+    axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), 0x00FF00, false ) ); // +Y
+    axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), 0x00FF00, true ) ); // -Y
+    axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, false ) ); // +Z
+    axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, true ) ); // -Z
 
+    return axes;
+
+}
+
+scene.add(buildAxes(1000));
 
 
 
@@ -179,9 +208,9 @@ loader.load('models/tree/tree.js', function (geometry, material) {
 
 
     mesh.scale.set( 0.001, 0.001, 0.001 );
-    mesh.position.x = 0;
+    mesh.position.x = 30;
     mesh.position.y = 0;
-    mesh.position.z = 0;
+    mesh.position.z = -30;
     mesh.doubleSided = true;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -198,12 +227,13 @@ loader.load('models/inn/inn.js', function (geometry, material) {
             materials
     );
 
-
-
     mesh.scale.set( 0.001, 0.001, 0.001 );
-    mesh.position.x = 10;
+    mesh.position.x = 40;
     mesh.position.y = 0;
-    mesh.position.z = 10;
+    mesh.position.z = -40;
+
+    //mesh.rotation.y = 180;
+
     mesh.doubleSided = true;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -211,7 +241,6 @@ loader.load('models/inn/inn.js', function (geometry, material) {
 });
 
 var render = function () {
-
     var accelerating = false;
 
     if (keyboard.pressed("left")) {
@@ -227,14 +256,17 @@ var render = function () {
 
         // check collision
         var new_position = new THREE.Vector3(
-                        cube.position.x + (velocity * Math.sin(playerAngle)),
+                        cube.position.x - (velocity * Math.sin(playerAngle)),
                         cube.position.y,
-                cube.position.z + (velocity * Math.cos(playerAngle)));
+                cube.position.z - (velocity * Math.cos(playerAngle)));
         if (!is_colliding(new_position, [obj])) {
             cube.position.x = new_position.x;
-            cube.position.y = new_position.y;
             cube.position.z = new_position.z;
         }
+    }
+
+    if (keyboard.pressed("space")) {
+        alert(cube.position.x + " - " + cube.position.z);
     }
 
     // velocity limit
