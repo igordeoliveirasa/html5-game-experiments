@@ -246,7 +246,8 @@ loader.load('models/inn/inn.js', function (geometry, material) {
             materials
     );
 
-    mesh.scale.set( 0.001, 0.001, 0.001 );
+    //mesh.scale.set( 0.001, 0.001, 0.001 );
+    mesh.scale.set( 1,1,1 );
     mesh.position.x = 40;
     mesh.position.y = 0;
     mesh.position.z = -40;
