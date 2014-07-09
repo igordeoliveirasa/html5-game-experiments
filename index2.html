@@ -34,20 +34,27 @@
     var engine = new BABYLON.Engine(canvas, true);
 
     var scene = new BABYLON.Scene(engine);
-    //var light = new BABYLON.PointLight("Omni", new BABYLON.Vector3(0, 100, 100), scene);
 
+
+    // lights
     var ambient_light = new BABYLON.HemisphericLight("Hemi0", new BABYLON.Vector3(0, 1, 0), scene);
     ambient_light.diffuse = new BABYLON.Color3(1, 1, 1);
     ambient_light.specular = new BABYLON.Color3(1, 1, 1);
     ambient_light.groundColor = new BABYLON.Color3(0, 0, 0);
 
+    // ground
     var ground = BABYLON.Mesh.CreatePlane("Plane", 200, scene);
     ground.rotation.x = Math.PI/2;
 
     var material = new BABYLON.StandardMaterial("texture", scene);
-    material.diffuseTexture = new BABYLON.Texture("textures/grass.jpg", scene);
+    material.diffuseTexture = new BABYLON.Texture("textures/grass2.jpg", scene);
     material.diffuseTexture.uScale = 100.0;
     material.diffuseTexture.vScale = 100.0;
+
+//    material.bumpTexture = new BABYLON.Texture("textures/grass2_bump_map.jpg", scene);
+//    material.bumpTexture.uScale = 100;
+//    material.bumpTexture.vScale = 100;
+
     ground.material = material;
 
     // Player
@@ -57,11 +64,32 @@
     material.diffuseTexture = new BABYLON.Texture("textures/box.jpg", scene);
     player.material = material;
 
+    // obstacle
+    var obstacle = BABYLON.Mesh.CreateSphere("Sphere", 10.0, 2.0, scene);
+    obstacle.position.y = 1;
+    var material = new BABYLON.StandardMaterial("texture", scene);
+    material.diffuseTexture = new BABYLON.Texture("textures/rock2.jpg", scene);
+    //material.bumpTexture = new BABYLON.Texture("textures/rock2_bump_map.png", scene);
+    //material.specularPower = 100;
+
+    //todo: material.specularTexture = new BABYLON.Texture("sky texture", scene);
+    obstacle.material = material;
+
+    // shadows
+    /*
+    var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
+    light.position = new BABYLON.Vector3(20, 40, 20);
+
+    var shadow_generator = new BABYLON.ShadowGenerator(1024, light);
+    shadow_generator.getShadowMap().renderList.push(player);
+    shadow_generator.getShadowMap().renderList.push(obstacle);
+    ground.receiveShadows = true;
+    */
+
     //inn
     BABYLON.SceneLoader.ImportMesh("", "models/babylon_inn/", "inn.babylon", scene, function (newMeshes) {
         //scene.scaling.x = scene.scaling.y = scene.scaling.z = 0.001;
-        newMeshes[0].position = new BABYLON.Vector3(0,0,25);
-
+        var inn = newMeshes[0].position = new BABYLON.Vector3(0,0,25);
         // Set the target of the camera to the first imported mesh
        // camera.target = newMeshes[0];
     });
