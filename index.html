@@ -34,9 +34,9 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor( 0xf0f0f0 );
 renderer.gammaInput = true;
 renderer.gammaOutput = true;
-renderer.shadowMapEnabled = true;
-renderer.shadowMapSoft = true;
-renderer.shadowMapType = THREE.PCFShadowMap;//THREE.PCFSoftShadowMap;
+//renderer.shadowMapEnabled = true;
+//renderer.shadowMapSoft = true;
+//renderer.shadowMapType = THREE.PCFShadowMap;//THREE.PCFSoftShadowMap;
 
 document.body.appendChild(renderer.domElement);
 
@@ -58,18 +58,18 @@ var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 // ground
 
 var geometry = new THREE.PlaneGeometry( 400, 400 );
-var texture = THREE.ImageUtils.loadTexture( "textures/grass.jpg" );
-var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture} );
-
+var texture = THREE.ImageUtils.loadTexture( "textures/grass2.jpg" );
 texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set( 200, 200 );
+texture.repeat.set(200,200);
+
+var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture} );
 
 var ground = new THREE.Mesh(geometry, material);
 ground.position.x = 0;
 ground.position.y = 0;
 ground.position.z = 0;
 ground.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-ground.receiveShadow = true;
+//ground.receiveShadow = true;
 scene.add( ground );
 
 
@@ -86,8 +86,8 @@ var cube = new THREE.Mesh(geometry, material);
 cube.position.x = 38;
 cube.position.y = 0.6;
 cube.position.z = -9;
-cube.castShadow = true;
-cube.receiveShadow = true;
+//cube.castShadow = true;
+//cube.receiveShadow = true;
 scene.add(cube);
 cube.add(camera);
 
@@ -106,8 +106,8 @@ obj.position.x = 50;
 obj.position.y = 1;
 obj.position.z = -30;
 
-obj.castShadow = true;
-obj.receiveShadow = true;
+//obj.castShadow = true;
+//obj.receiveShadow = true;
 
 scene.add(obj);
 
@@ -132,7 +132,7 @@ dirLight.position.set( -1, 1.75, 1 );
 dirLight.position.multiplyScalar( 50 );
 scene.add( dirLight );
 
-dirLight.castShadow = true;
+/*dirLight.castShadow = true;
 dirLight.shadowMapWidth = 2048;
 dirLight.shadowMapHeight = 2048;
 
@@ -147,7 +147,7 @@ dirLight.shadowCameraBottom = -d;
 dirLight.shadowCameraFar = 3500;
 dirLight.shadowBias = -0.0001;
 dirLight.shadowDarkness = 0.35;
-
+*/
 
 //collision
 var raycaster = new THREE.Raycaster();
@@ -231,8 +231,8 @@ loader.load('models/tree/tree.js', function (geometry, material) {
     mesh.position.y = 0;
     mesh.position.z = -30;
     mesh.doubleSided = true;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    //mesh.castShadow = true;
+    //mesh.receiveShadow = true;
     scene.add(mesh);
 });
 
@@ -253,8 +253,8 @@ loader.load('models/inn/inn.js', function (geometry, material) {
     mesh.position.z = -40;
 
     mesh.doubleSided = true;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    //mesh.castShadow = true;
+    //mesh.receiveShadow = true;
     scene.add(mesh);
 });
 
