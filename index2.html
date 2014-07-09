@@ -43,6 +43,7 @@
     ambient_light.groundColor = new BABYLON.Color3(0, 0, 0);
 
     // ground
+    /*
     var ground = BABYLON.Mesh.CreatePlane("Plane", 200, scene);
     ground.rotation.x = Math.PI/2;
 
@@ -50,12 +51,24 @@
     material.diffuseTexture = new BABYLON.Texture("textures/grass2.jpg", scene);
     material.diffuseTexture.uScale = 100.0;
     material.diffuseTexture.vScale = 100.0;
-
 //    material.bumpTexture = new BABYLON.Texture("textures/grass2_bump_map.jpg", scene);
 //    material.bumpTexture.uScale = 100;
 //    material.bumpTexture.vScale = 100;
-
     ground.material = material;
+    */
+
+    // heighmapped ground
+    var ground = BABYLON.Mesh.CreateGroundFromHeightMap("", "textures/heightmap.png", 100, 100, 250, 0, 8, scene, false);
+    ground.position.y = -8;
+    var material = new BABYLON.StandardMaterial("texture", scene);
+    material.diffuseTexture = new BABYLON.Texture("textures/grass2.jpg", scene);
+    material.diffuseTexture.uScale = 100.0;
+    material.diffuseTexture.vScale = 100.0;
+    //    material.bumpTexture = new BABYLON.Texture("textures/grass2_bump_map.jpg", scene);
+    //    material.bumpTexture.uScale = 100;
+    //    material.bumpTexture.vScale = 100;
+    ground.material = material;
+
 
     // Player
     var player = BABYLON.Mesh.CreateBox("Box", 1.0, scene);
