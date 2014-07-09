@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Babylon - Basic scene</title>
+    <style>
+        html, body, div, canvas {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="js/babylon/babylon.1.12.js"></script>
+    <script src="js/babylon/hand-1.3.8.js"></script>
+    <script src="js/threex.keyboardstate.js"></script>
+</head>
+<body>
+
+<div id="rootDiv">
+    <canvas id="renderCanvas"></canvas>
+</div>
+
+</body>
+
+
+<script type="text/javascript">
+
+    // Get the canvas element from our HTML below
+    var canvas = document.getElementById("renderCanvas");
+
+    // Load BABYLON 3D engine
+    var engine = new BABYLON.Engine(canvas, true);
+
+    var scene = new BABYLON.Scene(engine);
+    //var light = new BABYLON.PointLight("Omni", new BABYLON.Vector3(0, 100, 100), scene);
+
+    var ambient_light = new BABYLON.HemisphericLight("Hemi0", new BABYLON.Vector3(0, 1, 0), scene);
+    ambient_light.diffuse = new BABYLON.Color3(1, 1, 1);
+    ambient_light.specular = new BABYLON.Color3(1, 1, 1);
+    ambient_light.groundColor = new BABYLON.Color3(0, 0, 0);
+
+    var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, new BABYLON.Vector3.Zero(), scene);
+
+
+
+    var ground = BABYLON.Mesh.CreatePlane("Plane", 200, scene);
+    ground.rotation.x = Math.PI/2;
+
+    var material = new BABYLON.StandardMaterial("texture", scene);
+    material.diffuseTexture = new BABYLON.Texture("textures/grass.jpg", scene);
+    material.diffuseTexture.uScale = 100.0;
+    material.diffuseTexture.vScale = 100.0;
+    ground.material = material;
+
+    // Attach the camera to the scene
+    scene.activeCamera.attachControl(canvas);
+
+
+    // Player
+    var player = BABYLON.Mesh.CreateBox("Box", 1.0, scene);
+    player.position.y = 0.5;
+    material = new BABYLON.StandardMaterial("texture", scene);
+    material.diffuseTexture = new BABYLON.Texture("textures/box.jpg", scene);
+    player.material = material;
+
+
+    var animation = new BABYLON.Animation(
+            "animation",
+            "scaling.x",
+            30,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+
+    //inn
+
+    BABYLON.SceneLoader.ImportMesh("", "models/babylon_inn/", "inn.babylon", scene, function (newMeshes) {
+        scene.scaling.x = scene.scaling.y = scene.scaling.z = 0.001;
+        //scene.position.x = 0;
+        //scene.position.z = 0;
+
+        // Set the target of the camera to the first imported mesh
+        camera.target = newMeshes[0];
+    });
+
+
+    var keyboard    = new THREEx.KeyboardState();
+    // Once the scene is loaded, just register a render loop to render it
+    engine.runRenderLoop(function () {
+        if (keyboard.pressed("left")) {
+            player.rotation.y -= 0.1;
+        }
+        if (keyboard.pressed("right")) {
+            player.rotation.y += 0.1;
+        }
+        if (keyboard.pressed("up")) {
+            var posX = Math.sin(player.rotation.y);
+            var posZ = Math.cos(player.rotation.y);
+            player.position.x += 0.1 * posX;
+            player.position.z +=  0.1 * posZ;
+
+        }
+
+        //camera
+        camera.target = new BABYLON.Vector3(player.position.x, player.position.y, player.position.z);
+        camera.setPosition(new BABYLON.Vector3(player.position.x, player.position.y + 3, player.position.z-10))
+        scene.render();
+    });
+
+</script>
+</html>
