@@ -58,19 +58,38 @@
     */
 
     // heighmapped ground
-    scale = 10;
-    var ground = BABYLON.Mesh.CreateGroundFromHeightMap("", "textures/heightmap2.png", 1025*scale, 1025*scale, 250, 0, 40*scale, scene, false);
+    var scale = 10;
+    var ground = BABYLON.Mesh.CreateGroundFromHeightMap("", "textures/heightmap3.png", 1025*scale, 1025*scale, 250, 0, 70*scale, scene, false);
+    ground.refreshBoundingInfo();
+    ground.position.x = 0;
+    ground.position.z = 0;
+    ground.position.y = 0;
     //ground.position.y = 0;
     var material = new BABYLON.StandardMaterial("texture", scene);
     material.diffuseTexture = new BABYLON.Texture("textures/grass2.jpg", scene);
-    material.diffuseTexture.uScale = 600.0;
-    material.diffuseTexture.vScale = 600.0;
+    material.diffuseTexture.uScale = 2200.0;
+    material.diffuseTexture.vScale = 2200.0;
     ground.material = material;
+
+
+    // sea
+    var sea = BABYLON.Mesh.CreatePlane("Plane", 1025.0*scale, scene);
+    sea.rotation.x = Math.PI/2;
+    sea.position.y = 10;
+
+    material = new BABYLON.StandardMaterial("texture", scene);
+    material.diffuseTexture = new BABYLON.Texture("textures/water.jpg", scene);
+    material.diffuseTexture.uScale = 2200.0;
+    material.diffuseTexture.vScale = 2200.0;
+    sea.material = material;
+
 
 
     // Player
     var player = BABYLON.Mesh.CreateBox("Box", 1.0, scene);
-    player.position.y = 100;
+    player.position = new BABYLON.Vector3(-1768.6813960891138, 0, -3001.572321517636);
+    player.rotation.y = -4.5;
+    //player.position.z =
     material = new BABYLON.StandardMaterial("texture", scene);
     material.diffuseTexture = new BABYLON.Texture("textures/box.jpg", scene);
     player.material = material;
@@ -97,12 +116,32 @@
     ground.receiveShadows = true;
     */
 
+    var getHeightFromGround = function(x, z) {
+        return ground.getHeightAtCoordinates(x, z) + 0.6;
+    }
+
     //inn
     BABYLON.SceneLoader.ImportMesh("", "models/babylon_inn/", "inn.babylon", scene, function (newMeshes) {
         //scene.scaling.x = scene.scaling.y = scene.scaling.z = 0.001;
-        var inn = newMeshes[0].position = new BABYLON.Vector3(0,0,25);
+        var inn = newMeshes[0];
+        inn.position.x = -1747;
+        inn.position.z = -2998;
+        inn.position.y = getHeightFromGround(inn.x, inn.z) + 54.4;
+
         // Set the target of the camera to the first imported mesh
-       // camera.target = newMeshes[0];
+        // camera.target = newMeshes[0];
+    });
+
+    //tavern
+    BABYLON.SceneLoader.ImportMesh("", "models/tavern/", "tavern.babylon", scene, function (newMeshes) {
+        //scene.scaling.x = scene.scaling.y = scene.scaling.z = 0.001;
+        var inn = newMeshes[0];
+        inn.position.x = -1747;
+        inn.position.z = -2998 - 20;
+        inn.position.y = getHeightFromGround(inn.x, inn.z) + 54.4;
+        inn.rotation.y = Math.PI;
+        // Set the target of the camera to the first imported mesh
+        // camera.target = newMeshes[0];
     });
 
     //var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 100, new BABYLON.Vector3.Zero(), scene);
@@ -113,11 +152,21 @@
     camera.target = player;
     var initial_camera_alpha = camera.alpha;
     scene.activeCamera.attachControl(canvas);
+    camera.maxZ = 100000;
 
     var keyboard    = new THREEx.KeyboardState();
     // Once the scene is loaded, just register a render loop to render it
 
-    ground.refreshBoundingInfo();
+
+
+
+    window.addEventListener("click", function (evt) {
+        // We try to pick an object
+        var pickResult = scene.pick(evt.clientX, evt.clientY);
+        player.position.x = pickResult.pickedPoint.x;
+        player.position.z = pickResult.pickedPoint.z;
+        console.log("x :" + pickResult.pickedPoint.x + ", y: " + pickResult.pickedPoint.y + ", z: " + pickResult.pickedPoint.z);
+    });
 
     engine.runRenderLoop(function () {
         //ground.getHeightAtCoordinates(0,0);
@@ -148,7 +197,8 @@
             player.position.z +=  0.2 * Math.cos(player.rotation.y);
         }
         if (keyboard.pressed("space")) {
-            console.log(player.position.x + " - " + player.position.y);
+            console.log("x :" + player.position.x + ", y: " + player.position.y + ", z: " + player.position.z);
+            console.log("rotation.y: " + player.rotation.y);
         }
 
         camera.alpha = -player.rotation.y+initial_camera_alpha;
